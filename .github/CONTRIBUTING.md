@@ -14,3 +14,4 @@ We love your input! We want to make contributing to this project as easy and tra
 ## Core Team Members
 
 - [enZane](https://github.com/enZane)
+- [YouuHD](https://github.com/YouuHD)
