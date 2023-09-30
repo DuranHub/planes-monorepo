@@ -23,7 +23,6 @@ export class prismaProcedureProjectMapper {
         createdAt: procedureProjectData.createdAt,
         updatedAt: procedureProjectData.updatedAt,
       },
-      procedureProjectData.id,
     );
   }
 }
