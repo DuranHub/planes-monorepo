@@ -8,10 +8,10 @@ async function bootstrap() {
   console.log(`⚡️ Running on http://localhost:3000`);
 
   const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The WorkFlowBuilder API description')
-    .setVersion('1.0')
-    .addTag('workflowbuilder')
+    .setTitle('Workflow Builder service')
+    .setDescription('Service dedicated to link data inputs to activities, and activities to entities, aimed to create a Procedure Project')
+    .setVersion('0.0.1')
+    .addTag('Workflow Builder Service')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
