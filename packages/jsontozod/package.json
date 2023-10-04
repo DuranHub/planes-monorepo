@@ -1,0 +1,14 @@
+{
+  "name": "jsontozod",
+  "version": "0.0.0",
+  "description": "Json to zod library",
+  "main": "index.js",
+  "author": "enZane",
+  "license": "MIT",
+  "dependencies": {
+    "zod": "^3.22.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  }
+}
