@@ -9,6 +9,13 @@ export default {
 //Arguments for input
 const InputArgs = args => <Input {...args} />
 
+//Text Input Component
+export const Text = InputArgs.bind({})
+Text.args = {
+    placeholder: "Text Input Component",
+    maxLength: 200,
+}
+
 //Decimal Value
 export const DecimalValue = InputArgs.bind({})
 DecimalValue.args = {
@@ -19,12 +26,6 @@ DecimalValue.args = {
 export const IntegerValue = InputArgs.bind({})
 IntegerValue.args = {
     placeholder: "21",
-}
-
-//Text
-export const Text = InputArgs.bind({})
-Text.args = {
-    placeholder: "Base Text",
 }
 
 //Alphabetic Text
