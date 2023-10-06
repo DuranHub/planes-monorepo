@@ -8,7 +8,7 @@ export interface InputProps
         isRequired: boolean;
     }
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
+const AlphabeticInput = React.forwardRef<HTMLInputElement, InputProps>(
     ({ className, type, isRequired, ...props }, ref) => {
     return (
         <input
@@ -24,6 +24,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     )
     }
 )
-Input.displayName = "Input"
+AlphabeticInput.displayName = "Input"
 
-export { Input }
+export { AlphabeticInput }
