@@ -1,41 +1,26 @@
 import React from 'react';
 import { Input } from './index';
+import ComponentResolver from './componentResolver';
 
 export default {
     title: "Input",
-    component: Input
+    component: Input,
+    argTypes: {
+        inputType: { //Combobox for selecting input types
+            type: 'select',
+            options: ['text', 'alphabetic']
+        }
+    }
 }
 
-//Arguments for input
-const InputArgs = args => <Input {...args} />
+const Template = (args) => <ComponentResolver {...args} />; //Arguments for component resolver
 
-//Text Input Component
-export const Text = InputArgs.bind({})
+export const Text = Template.bind({});
 Text.args = {
-    placeholder: "Text Input Component",
-    maxLength: 200,
-}
+    inputType: 'text',
+};
 
-//Decimal Value
-export const DecimalValue = InputArgs.bind({})
-DecimalValue.args = {
-    placeholder: "3.14",
-}
-
-//Integer Value
-export const IntegerValue = InputArgs.bind({})
-IntegerValue.args = {
-    placeholder: "21",
-}
-
-//Alphabetic Text
-export const AlphabeticText = InputArgs.bind({})
-AlphabeticText.args = {
-    placeholder: "Hello World!",
-}
-
-//Alphanumeric Text
-export const AlphanumericText = InputArgs.bind({})
-AlphanumericText.args = {
-    placeholder: "Hello123",
-}
+export const Alphabetic = Template.bind({});
+Alphabetic.args = {
+    inputType: 'alphabetic',
+};
