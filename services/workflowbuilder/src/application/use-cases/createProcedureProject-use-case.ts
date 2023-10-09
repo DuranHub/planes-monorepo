@@ -24,7 +24,6 @@ export class createProcedureProjectUseCase
     request: createProcedureProjectRequest,
   ): Promise<createProcedureProjectResponse> {
     const { name, machineName, description } = request;
-    console.log("from use-case",machineName);
     
     const procedureProject = new ProcedureProject({
       name,

@@ -1,16 +1,16 @@
-import { ProcedureProject } from "src/application/entities/procedureProject";
-import { procedureProjectDto } from "../dtos/procedureProjectDto";
+import { ProcedureProject } from 'src/application/entities/procedureProject';
+import { procedureProjectDto } from '../dtos/procedureProjectDto';
 export class procedureProjectMapper {
-    constructor(){}
+  constructor() {}
 
-    public static toDto(procedureProject: ProcedureProject): procedureProjectDto{
-        return { 
-            id: procedureProject.id,
-            name: procedureProject.name,
-            description: procedureProject.description,
-            machineName: procedureProject.machineName,
-            createdAt: procedureProject.createdAt || undefined,
-            updatedAt: procedureProject.updateAt || undefined
-        }
-    }
+  public static toDto(procedureProject: ProcedureProject): procedureProjectDto {
+    return {
+      id: procedureProject.id,
+      name: procedureProject.name,
+      description: procedureProject.description,
+      machineName: procedureProject.machineName,
+      createdAt: procedureProject.createdAt || undefined,
+      updatedAt: procedureProject.updateAt || undefined,
+    };
+  }
 }
