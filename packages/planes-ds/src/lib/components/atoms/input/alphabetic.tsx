@@ -48,6 +48,6 @@ const AlphabeticInput = React.forwardRef<HTMLInputElement, InputProps>(
     }
 )
 
-AlphabeticInput.displayName = "AlphabeticalInput"
+AlphabeticInput.displayName = "AlphabeticInput"
 
 export { AlphabeticInput }
