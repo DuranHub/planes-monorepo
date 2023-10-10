@@ -6,6 +6,7 @@ export interface ProcedureProjectProps {
   name: string;
   machineName: string;
   description: string;
+  deletedAt?: Date | null;
 }
 
 export class ProcedureProject {
@@ -61,5 +62,11 @@ export class ProcedureProject {
   }
   public get description(): string {
     return this.props.description;
+  }
+  public set deletedAt(updateAt: Date) {
+    this.props.deletedAt = updateAt;
+  }
+  public get deletedAt(): Date | null | undefined {
+    return this.props.deletedAt;
   }
 }
