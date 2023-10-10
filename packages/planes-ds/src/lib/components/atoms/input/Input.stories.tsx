@@ -1,8 +1,6 @@
 import React from 'react';
 import { Input } from './index';
 import ComponentResolver from './componentResolver';
-import { validate } from './validate'
-import {validate_Input} from './validate'
 import { IntegerInput } from './integerInput';
 
 export default {
@@ -15,7 +13,6 @@ export default {
         }
     }
 }
-validate();
 
 const Template = (args) => <ComponentResolver {...args} />; //Arguments for component resolver
 
@@ -32,8 +29,8 @@ Alphabetic.args = {
     inputType: 'alphabetic',
 };
 
-export const Integer_Second = IntegerInputArgs.bind({});
-Integer_Second.args = {
+export const Integer = IntegerInputArgs.bind({});
+Integer.args = {
     inputType: 'Integer',
     //type: 'number',
     placeholder: "123",
