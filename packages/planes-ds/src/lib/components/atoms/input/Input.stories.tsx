@@ -32,7 +32,6 @@ Alphabetic.args = {
 export const Integer = IntegerInputArgs.bind({});
 Integer.args = {
     inputType: 'Integer',
-    //type: 'number',
     placeholder: "123",
     value: 1,
 };
