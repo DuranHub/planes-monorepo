@@ -4,7 +4,6 @@ import {
   Delete,
   InternalServerErrorException,
   NotFoundException,
-  Param,
   Post,
 } from '@nestjs/common';
 import { deleteProcedureProjectUseCase } from 'src/application/use-cases/deleteProcedureProject-use-case';
@@ -12,9 +11,13 @@ import { createProcedureProjectUseCase } from 'src/application/use-cases/createP
 import { createProcedureProjectDto } from '../dtos/createProcedureProjectDto';
 import { procedureProjectMapper } from '../mappers/proccedureProject-mapper';
 import { ApiResponse } from '@nestjs/swagger';
+import { deleteProcedureProjectDto } from '../dtos/deleteProcedureProjectDto';
 
 const RESPONSES = {
+  CREATED: 201,
   SUCCESS: 204,
+  NOT_FOUND: 404,
+  INTERNAL_SERVER_ERROR: 500,
 };
 
 @Controller()
@@ -26,11 +29,11 @@ export class procedureProjectController {
 
   @Post()
   @ApiResponse({
-    status: 201,
+    status: RESPONSES.CREATED,
     description: 'The WorkFlowBuilder has been successfully created.',
   })
   @ApiResponse({
-    status: 500,
+    status: RESPONSES.INTERNAL_SERVER_ERROR,
     description: 'Internal server error.',
   })
   async create(@Body() body: createProcedureProjectDto) {
@@ -45,25 +48,23 @@ export class procedureProjectController {
     return { procedureProject: procedureProjectMapper.toDto(procedureProject) };
   }
 
-  @Delete(':id')
+  @Delete()
   @ApiResponse({
     status: RESPONSES.SUCCESS,
     description: 'Procedure Project deleted successfully.',
   })
   @ApiResponse({
-    status: 404,
+    status: RESPONSES.NOT_FOUND,
     description: 'Procedure Project not found.',
   })
   @ApiResponse({
-    status: 500,
+    status: RESPONSES.INTERNAL_SERVER_ERROR,
     description: 'Internal server error.',
   })
-  async delete(@Param('id') id: string) {
-    const response = await this.DeleteProcedureProjectUseCase.execute({
-      id,
-    });
+  async delete(@Body() deleteProcedureProjectDto: deleteProcedureProjectDto) {
+    const { id } = deleteProcedureProjectDto;
+    const response = await this.DeleteProcedureProjectUseCase.execute({ id });
 
-    console.log('Controller: ', response);
     if (!response.success) {
       if (response.message !== 'Procedure Project not found') {
         throw new InternalServerErrorException('Internal server error');
