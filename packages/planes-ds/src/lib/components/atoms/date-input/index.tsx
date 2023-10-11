@@ -16,7 +16,9 @@ import {
 export function DateInput({
     className, // className prop for styling
     mode, // mode prop to determine if the date picker is in 'single' or 'range' mode
-}: React.HTMLAttributes<HTMLDivElement> & { mode: "single" | "range" }) {
+    fromYear,
+    toYear,
+}: React.HTMLAttributes<HTMLDivElement> & { mode: "single" | "range",  fromYear: number, toYear: number }) {
     // Use React's useState hook to create state variables for singleDate and dateRange
     const [singleDate, setSingleDate] = React.useState<Date>()
     const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
@@ -63,6 +65,9 @@ export function DateInput({
                 <Calendar
                     initialFocus
                     mode={mode}
+                    captionLayout="dropdown-buttons"
+                    fromYear={fromYear} 
+                    toYear={toYear}
                     defaultMonth={singleDate}
                     selected={singleDate}
                     onSelect={setSingleDate}
@@ -72,6 +77,9 @@ export function DateInput({
                 <Calendar
                     initialFocus
                     mode={mode}
+                    captionLayout="dropdown-buttons"
+                    fromYear={fromYear} 
+                    toYear={toYear}
                     defaultMonth={dateRange?.from}
                     selected={dateRange}
                     onSelect={setDateRange}
