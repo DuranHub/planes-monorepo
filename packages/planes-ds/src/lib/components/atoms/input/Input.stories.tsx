@@ -2,7 +2,7 @@ import React from 'react';
 import { Input } from './index';
 import ComponentResolver from './componentResolver';
 import { IntegerInput } from './integerInput';
-import { DecimalInput } from './decimal_Input';
+import { DecimalInput } from './decimalInput';
 
 export default {
     title: "Input",
