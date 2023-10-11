@@ -12,6 +12,7 @@ export class prismaProcedureProjectMapper {
       description: procedureProject.description,
       createdAt: procedureProject.createdAt ||  undefined,
       updatedAt: procedureProject.updateAt || undefined,
+      deletedAt: procedureProject.deletedAt || undefined,
     };
   }
   public static toDomain(procedureProjectData: PrismaProcedureProject) {
@@ -22,6 +23,7 @@ export class prismaProcedureProjectMapper {
         description: procedureProjectData.description,
         createdAt: procedureProjectData.createdAt,
         updatedAt: procedureProjectData.updatedAt,
+        deletedAt: procedureProjectData.deletedAt || undefined,
       },
     );
   }
