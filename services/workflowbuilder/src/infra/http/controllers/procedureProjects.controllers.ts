@@ -3,6 +3,9 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
+  Put,
   Param,
   InternalServerErrorException,
   NotFoundException,
@@ -14,8 +17,8 @@ import { createProcedureProjectDto } from '../dtos/createProcedureProjectDto';
 import { procedureProjectMapper } from '../mappers/proccedureProject-mapper';
 import { ApiResponse } from '@nestjs/swagger';
 import { ProcedureProject } from 'src/application/entities/procedureProject';
-import { PrismaClient } from '@prisma/client';
 import { prismaProcedureProjectRepository } from 'src/infra/database/prisma/repositories/prisma-procedureProject-repository';
+import { updateProcedureProjectDto } from '../dtos/updateProcedureProjectDto';
 import { deleteProcedureProjectDto } from '../dtos/deleteProcedureProjectDto';
 
 const RESPONSES = {
@@ -29,6 +32,7 @@ const RESPONSES = {
 export class procedureProjectController {
   constructor(
     private CreateProcedureProjectUseCase: createProcedureProjectUseCase,
+    private PrismaProcedureProjectRepository: prismaProcedureProjectRepository,
     private prismaProcedureProjectRepository: prismaProcedureProjectRepository,
     private DeleteProcedureProjectUseCase: deleteProcedureProjectUseCase,
   ) {}
@@ -65,16 +69,20 @@ export class procedureProjectController {
       'All the "ProcedureProject" records with matching fields were found successfully.',
   })
   @ApiResponse({
-    status: 500,
-    description: 'Internal server error.',
+    status: 400,
+    description: 'ProcedureProjec Not Found',
   })
   async findByField(
-    @Param('field') field: string,
+    @Param('field') field: 'id' | 'machineName' | 'name',
     @Param('value') value: string,
   ): Promise<ProcedureProject[] | null> {
-    const procedureProject  = await this.prismaProcedureProjectRepository.findByField(field,value)
-    return procedureProject
-  } 
+    const procedureProject =
+      await this.PrismaProcedureProjectRepository.findByField(field, value);
+    if (!procedureProject) {
+      throw new HttpException('Server Error', HttpStatus.NOT_FOUND);
+    }
+    return procedureProject;
+  }
 
   @Get()
   @ApiResponse({
@@ -87,11 +95,48 @@ export class procedureProjectController {
   })
   async findAll(): Promise<ProcedureProject[] | null> {
     const procedureProjects =
-      await this.prismaProcedureProjectRepository.findAll();
+      await this.PrismaProcedureProjectRepository.findAll();
     if (!procedureProjects) {
-      console.log('No "ProcedureProject" were found');
+      throw new HttpException('Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return procedureProjects;
+  }
+
+  @Put(':machineName')
+  @ApiResponse({
+    status: 200,
+    description: 'The "ProcedureProject" has been successfully updated',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'ProcedureProject not found',
+  })
+  async update(
+    @Param('machineName') machineName: string,
+    @Body() updateData: updateProcedureProjectDto,
+  ): Promise<ProcedureProject> {
+    const procedureProject =
+      await this.PrismaProcedureProjectRepository.findByField(
+        'machineName',
+        machineName,
+      );
+
+    if (!procedureProject) {
+      throw new HttpException(
+        'ProcedureProject Not Found',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    const procedureProjectUpdate =
+      await this.PrismaProcedureProjectRepository.update(
+        machineName,
+        updateData,
+      );
+    return procedureProjectUpdate;
   }
   @Delete()
   @ApiResponse({

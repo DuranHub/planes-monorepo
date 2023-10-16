@@ -3,34 +3,34 @@ import { ProcedureProject } from '../entities/procedureProject';
 import { UseCase } from './use-case';
 import { procedureProjectRepository } from '../repositories/procedure-project-repository';
 
-export interface createProcedureProjectRequest {
+interface createProcedureProjectRequest {
   name: string;
   machineName: string;
   description: string;
 }
-export interface createProcedureProjectResponse {
+interface createProcedureProjectResponse {
   procedureProject: ProcedureProject;
 }
-  
+
 @Injectable()
 export class createProcedureProjectUseCase
   implements
     UseCase<createProcedureProjectRequest, createProcedureProjectResponse>
 {
   constructor(
-    private readonly procedureProjectRepository: procedureProjectRepository,
+    private readonly ProcedureProjectRepository: procedureProjectRepository,
   ) {}
   async execute(
     request: createProcedureProjectRequest,
   ): Promise<createProcedureProjectResponse> {
     const { name, machineName, description } = request;
-    
+
     const procedureProject = new ProcedureProject({
       name,
       description,
-      machineName
+      machineName,
     });
-    await this.procedureProjectRepository.create(procedureProject);
+    await this.ProcedureProjectRepository.create(procedureProject);
     return { procedureProject };
   }
 }
