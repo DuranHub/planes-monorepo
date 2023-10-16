@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
+  Param,
   InternalServerErrorException,
   NotFoundException,
   Post,
@@ -11,6 +13,9 @@ import { createProcedureProjectUseCase } from 'src/application/use-cases/createP
 import { createProcedureProjectDto } from '../dtos/createProcedureProjectDto';
 import { procedureProjectMapper } from '../mappers/proccedureProject-mapper';
 import { ApiResponse } from '@nestjs/swagger';
+import { ProcedureProject } from 'src/application/entities/procedureProject';
+import { PrismaClient } from '@prisma/client';
+import { prismaProcedureProjectRepository } from 'src/infra/database/prisma/repositories/prisma-procedureProject-repository';
 import { deleteProcedureProjectDto } from '../dtos/deleteProcedureProjectDto';
 
 const RESPONSES = {
@@ -24,10 +29,15 @@ const RESPONSES = {
 export class procedureProjectController {
   constructor(
     private CreateProcedureProjectUseCase: createProcedureProjectUseCase,
+    private prismaProcedureProjectRepository: prismaProcedureProjectRepository,
     private DeleteProcedureProjectUseCase: deleteProcedureProjectUseCase,
   ) {}
 
   @Post()
+  @ApiResponse({
+    status: 201,
+    description: 'The WorkFlowBuilder has been successfully created.',
+  })
   @ApiResponse({
     status: RESPONSES.CREATED,
     description: 'The WorkFlowBuilder has been successfully created.',
@@ -48,6 +58,41 @@ export class procedureProjectController {
     return { procedureProject: procedureProjectMapper.toDto(procedureProject) };
   }
 
+  @Get('search/:field/:value')
+  @ApiResponse({
+    status: 200,
+    description:
+      'All the "ProcedureProject" records with matching fields were found successfully.',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error.',
+  })
+  async findByField(
+    @Param('field') field: string,
+    @Param('value') value: string,
+  ): Promise<ProcedureProject[] | null> {
+    const procedureProject  = await this.prismaProcedureProjectRepository.findByField(field,value)
+    return procedureProject
+  } 
+
+  @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'All the "ProcedureProject" had been found',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error.',
+  })
+  async findAll(): Promise<ProcedureProject[] | null> {
+    const procedureProjects =
+      await this.prismaProcedureProjectRepository.findAll();
+    if (!procedureProjects) {
+      console.log('No "ProcedureProject" were found');
+    }
+    return procedureProjects;
+  }
   @Delete()
   @ApiResponse({
     status: RESPONSES.SUCCESS,

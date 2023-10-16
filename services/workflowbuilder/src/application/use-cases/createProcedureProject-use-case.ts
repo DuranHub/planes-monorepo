@@ -11,7 +11,7 @@ export interface createProcedureProjectRequest {
 export interface createProcedureProjectResponse {
   procedureProject: ProcedureProject;
 }
-
+  
 @Injectable()
 export class createProcedureProjectUseCase
   implements
@@ -24,12 +24,11 @@ export class createProcedureProjectUseCase
     request: createProcedureProjectRequest,
   ): Promise<createProcedureProjectResponse> {
     const { name, machineName, description } = request;
-    console.log('from use-case', machineName);
-
+    
     const procedureProject = new ProcedureProject({
       name,
       description,
-      machineName,
+      machineName
     });
     await this.procedureProjectRepository.create(procedureProject);
     return { procedureProject };
