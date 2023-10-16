@@ -1,6 +1,7 @@
-import React from 'react';
-import { Button } from './index';
+import React from 'react';    //Imports from react to this file
+import { Button } from './index';   //Import of our component button
 
+//Export of our button with title and component
 export default {
     title: "Button",
     component: Button

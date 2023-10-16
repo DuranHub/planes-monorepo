@@ -7,6 +7,7 @@ import { PrismaService } from '../database/prisima.service';
 import { updateProcedureProjectUseCase } from 'src/application/use-cases/updateProcedureProject-use-case';
 import { findAllProcedureProjectUseCase } from 'src/application/use-cases/findAll-ProcedureProject-use-case';
 import { findByFieldProcedureProjecUseCase } from 'src/application/use-cases/findByField-ProcedureProject-use-case';
+import { deleteProcedureProjectUseCase } from 'src/application/use-cases/deleteProcedureProject-use-case'
 
 @Module({
   imports: [DatabaseModule],

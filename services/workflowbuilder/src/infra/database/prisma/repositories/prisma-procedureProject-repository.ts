@@ -19,7 +19,6 @@ export class prismaProcedureProjectRepository
       data: procedureProjectPrismaData,
     });
   }
-
   async findByField(
     field: 'name' | 'machineName' | 'id',
     value: string,
@@ -52,6 +51,38 @@ export class prismaProcedureProjectRepository
     );
 
     return procedureProject;
+}
+
+async delete(id: string): Promise<void> {
+    try {
+      console.log('Prisma repository - ID a eliminar: ', id);
+
+      const existingRecord =
+        await this.prismaService.procedureProject.findUnique({
+          where: {
+            id,
+          },
+        });
+
+      if (!existingRecord) {
+        throw new Error('Registro no encontrado o ya eliminado');
+      }
+
+      if (existingRecord.deletedAt) {
+        throw new Error('Registro ya ha sido eliminado');
+      }
+
+      await this.prismaService.procedureProject.update({
+        where: {
+          id,
+        },
+        data: {
+          deletedAt: new Date().toISOString(),
+        },
+      });
+    } catch (error) {
+      throw new Error('Prisma repository - Error al actualizar')
+    }
   }
 
   async update(

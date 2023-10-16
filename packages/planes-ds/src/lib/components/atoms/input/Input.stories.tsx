@@ -1,40 +1,45 @@
 import React from 'react';
 import { Input } from './index';
+import ComponentResolver from './componentResolver';
+import { IntegerInput } from './integerInput';
+import { DecimalInput } from './decimalInput';
 
 export default {
     title: "Input",
-    component: Input
+    component: Input,
+    argTypes: {
+        inputType: { //Combobox for selecting input types
+            type: 'select',
+            options: ['text', 'alphabetic']
+        }
+    }
 }
 
-//Arguments for input
-const InputArgs = args => <Input {...args} />
+const Template = (args) => <ComponentResolver {...args} />; //Arguments for component resolver
 
-//Decimal Value
-export const DecimalValue = InputArgs.bind({})
-DecimalValue.args = {
-    placeholder: "3.14",
-}
+const IntegerInputArgs = args => <IntegerInput {...args} />
 
-//Integer Value
-export const IntegerValue = InputArgs.bind({})
-IntegerValue.args = {
-    placeholder: "21",
-}
+const DecimalInputArgs = args => <DecimalInput {...args} />
 
-//Text
-export const Text = InputArgs.bind({})
+export const Text = Template.bind({});
 Text.args = {
-    placeholder: "Base Text",
-}
+    inputType: 'text',
+};
 
-//Alphabetic Text
-export const AlphabeticText = InputArgs.bind({})
-AlphabeticText.args = {
-    placeholder: "Hello World!",
-}
+export const Alphabetic = Template.bind({});
+Alphabetic.args = {
+    inputType: 'alphabetic',
+};
 
-//Alphanumeric Text
-export const AlphanumericText = InputArgs.bind({})
-AlphanumericText.args = {
-    placeholder: "Hello123",
-}
+export const Integer = IntegerInputArgs.bind({});
+Integer.args = {
+    inputType: 'Integer',
+    placeholder: "123",
+    value: 1,
+};
+
+export const Decimal = DecimalInputArgs.bind({});
+Decimal.args = {
+    inputType: 'Decimal',
+    placeholder: "1.23",
+};
