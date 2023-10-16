@@ -40,3 +40,54 @@ Default.args = {
 }
 
 export const Form = FormArgs.bind({})
+
+export const AutoComplete = Template.bind({})
+AutoComplete.args = {
+    selectLabel: "Select person...",
+    searchLabel: "Search person...",
+    notFoundMessage: "",
+    autoComplete: true, 
+    items: [
+        {
+            value: 'alexander',
+            label: 'Alexander',
+        },
+        {
+            value: 'bella',
+            label: 'Bella',
+        },
+        {
+            value: 'carol',
+            label: 'Carol',
+        },
+        {
+            value: 'david',
+            label: 'David',
+        },
+        {
+            value: 'emma',
+            label: 'Emma',
+        },
+        {
+            value: 'frank',
+            label: 'Frank',
+        },
+        {
+            value: 'george',
+            label: 'George',
+        },
+        {
+            value: 'harry',
+            label: 'Harry',
+        },
+        {
+            value: 'isabella',
+            label: 'Isabella',
+        },
+        {
+            value: 'jackson',
+            label: 'Jackson',
+        },
+    ],
+    
+}
