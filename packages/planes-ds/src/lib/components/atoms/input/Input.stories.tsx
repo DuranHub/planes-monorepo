@@ -2,6 +2,7 @@ import React from 'react';
 import { Input } from './index';
 import ComponentResolver from './componentResolver';
 import { IntegerInput } from './integerInput';
+import { DecimalInput } from './decimalInput';
 
 export default {
     title: "Input",
@@ -18,6 +19,7 @@ const Template = (args) => <ComponentResolver {...args} />; //Arguments for comp
 
 const IntegerInputArgs = args => <IntegerInput {...args} />
 
+const DecimalInputArgs = args => <DecimalInput {...args} />
 
 export const Text = Template.bind({});
 Text.args = {
@@ -34,4 +36,10 @@ Integer.args = {
     inputType: 'Integer',
     placeholder: "123",
     value: 1,
+};
+
+export const Decimal = DecimalInputArgs.bind({});
+Decimal.args = {
+    inputType: 'Decimal',
+    placeholder: "1.23",
 };
