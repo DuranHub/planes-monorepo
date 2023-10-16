@@ -3,7 +3,7 @@ import { prismaProcedureProjectMapper } from 'src/infra/database/prisma/mappers/
 import { ProcedureProject } from 'src/application/entities/procedureProject';
 import { procedureProjectRepository } from 'src/application/repositories/procedure-project-repository';
 import { PrismaService } from '../../prisima.service';
-import { procedureProjectMapper } from 'src/infra/http/mappers/proccedureProject-mapper';
+import { updateProcedureProjectDto } from 'src/infra/http/dtos/updateProcedureProjectDto';
 
 @Injectable()
 export class prismaProcedureProjectRepository
@@ -21,9 +21,9 @@ export class prismaProcedureProjectRepository
   }
 
   async findByField(
-    field: string,
+    field: 'name' | 'machineName' | 'id',
     value: string,
-  ): Promise<ProcedureProject[] | null> {
+  ): Promise<ProcedureProject[]> {
     const procedureProjectPrismaData =
       await this.prismaService.procedureProject.findMany({
         where: {
@@ -33,26 +33,41 @@ export class prismaProcedureProjectRepository
         },
       });
     if (!procedureProjectPrismaData) {
-      throw console.log('No procedureProject where found');
+      throw new Error('Procedure Project not found');
     }
-
     const procedureProject = procedureProjectPrismaData.map(
       prismaProcedureProjectMapper.toDomain,
     );
     return procedureProject;
   }
 
-  async findAll(): Promise<ProcedureProject[] | null> {
+  async findAll(): Promise<ProcedureProject[]> {
     const procedureProjectPrismaData =
       await this.prismaService.procedureProject.findMany();
-
     if (!procedureProjectPrismaData) {
-      console.log('No procedure project were found');
+      throw new Error('Procedure Project not found');
     }
     const procedureProject = procedureProjectPrismaData.map(
       prismaProcedureProjectMapper.toDomain,
     );
 
+    return procedureProject;
+  }
+
+  async update(
+    machineName: string,
+    data: updateProcedureProjectDto,
+  ): Promise<ProcedureProject> {
+    const ProcedureProjectPrismaData =
+      await this.prismaService.procedureProject.update({
+        where: {
+          machineName: machineName,
+        },
+        data,
+      });
+    const procedureProject = prismaProcedureProjectMapper.toDomain(
+      ProcedureProjectPrismaData,
+    );
     return procedureProject;
   }
 }

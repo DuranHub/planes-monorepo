@@ -15,6 +15,6 @@ model procedureProject {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   name        String
-  machineName String
+  machineName String   @unique
   description String
 }
