@@ -13,4 +13,6 @@ export class procedureProjectDto {
   createdAt?: Date;
   @ApiProperty()
   updatedAt?: Date;
+  @ApiProperty()
+  deletedAt?: Date;
 }

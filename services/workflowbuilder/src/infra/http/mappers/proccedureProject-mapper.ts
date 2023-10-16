@@ -11,6 +11,7 @@ export class procedureProjectMapper {
       machineName: procedureProject.machineName,
       createdAt: procedureProject.createdAt || undefined,
       updatedAt: procedureProject.updateAt || undefined,
+      deletedAt: procedureProject.deletedAt || undefined,
     };
   }
 }
