@@ -4,6 +4,21 @@ import { ProcedureProject } from 'src/application/entities/procedureProject';
 import { procedureProjectRepository } from 'src/application/repositories/procedure-project-repository';
 import { PrismaService } from '../../prisima.service';
 
+function validateField(
+  value: string,
+  minLength: number,
+  maxLength: number,
+  fieldName: string,
+) {
+  if (value.length < minLength || value.length > maxLength) {
+    throw new Error(
+      `The ${fieldName} must be between ${minLength} and ${maxLength} characters long`,
+    );
+  }
+  if (value.trim() === '') {
+    throw new Error(`The ${fieldName} must not be empty`);
+  }
+}
 @Injectable()
 export class prismaProcedureProjectRepository
   implements procedureProjectRepository
@@ -12,6 +27,11 @@ export class prismaProcedureProjectRepository
   async create(procedureProject: ProcedureProject): Promise<void> {
     const procedureProjectPrismaData =
       prismaProcedureProjectMapper.toPrisma(procedureProject);
+
+    const { name, description } = procedureProjectPrismaData;
+
+    validateField(name, 3, 25, 'name');
+    validateField(description, 3, 280, 'description');
 
     await this.prismaService.procedureProject.create({
       data: procedureProjectPrismaData,
@@ -45,7 +65,7 @@ export class prismaProcedureProjectRepository
         },
       });
     } catch (error) {
-      throw new Error('Prisma repository - Error al actualizar')
+      throw new Error('Prisma repository - Error al actualizar');
     }
   }
 }
