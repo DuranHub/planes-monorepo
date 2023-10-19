@@ -14,6 +14,7 @@ import { deleteProcedureProjectUseCase } from 'src/application/use-cases/deleteP
   controllers: [procedureProjectController],
   providers: [
     createProcedureProjectUseCase,
+    deleteProcedureProjectUseCase,
     updateProcedureProjectUseCase,
     findAllProcedureProjectUseCase,
     findByFieldProcedureProjecUseCase,
