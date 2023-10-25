@@ -20,6 +20,7 @@ function validateField(
     throw new Error(`The ${fieldName} must not be empty`);
   }
 }
+ 
 @Injectable()
 export class prismaProcedureProjectRepository
   implements procedureProjectRepository
@@ -71,9 +72,9 @@ export class prismaProcedureProjectRepository
     );
 
     return procedureProject;
-}
+  }
 
-async delete(id: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     try {
       console.log('Prisma repository - ID a eliminar: ', id);
 
@@ -116,6 +117,12 @@ async delete(id: string): Promise<void> {
         },
         data,
       });
+
+    const { name, description } = data;
+
+    validateField(name, 3, 25, 'name');
+    validateField(description, 3, 280, 'description');
+
     const procedureProject = prismaProcedureProjectMapper.toDomain(
       ProcedureProjectPrismaData,
     );

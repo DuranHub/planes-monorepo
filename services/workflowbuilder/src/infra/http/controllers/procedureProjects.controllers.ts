@@ -33,7 +33,6 @@ export class procedureProjectController {
   constructor(
     private CreateProcedureProjectUseCase: createProcedureProjectUseCase,
     private PrismaProcedureProjectRepository: prismaProcedureProjectRepository,
-    private prismaProcedureProjectRepository: prismaProcedureProjectRepository,
     private DeleteProcedureProjectUseCase: deleteProcedureProjectUseCase,
   ) {}
 
