@@ -2,8 +2,8 @@ name: 🚀 Deploy
 on:
   push:
     branches:
-      - main
-      - dev
+      - _main
+      - _dev
   pull_request: {}
 
 concurrency:
