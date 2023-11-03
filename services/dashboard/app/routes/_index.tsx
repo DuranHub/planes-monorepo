@@ -1,17 +1,8 @@
 import { type MetaFunction } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
 
 export const meta: MetaFunction = () => [{ title: 'PlanEs' }]
 
-export const loader = async () => {
-	const user = await fetch('https://localhost:7777/users')
-	console.log(user)
-	return { user }
-}
-
 export default function Index() {
-	const user = useLoaderData()
-	console.log(user)
 	return (
 		<main className="relative flex min-h-screen items-center justify-center">
 			<div className="relative">
