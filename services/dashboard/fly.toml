@@ -1,4 +1,4 @@
-app = "dashboard-f23f"
+app = "dashboard-3909"
 primary_region = "sjc"
 kill_signal = "SIGINT"
 kill_timeout = 5

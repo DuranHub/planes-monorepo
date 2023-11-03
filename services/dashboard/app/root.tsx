@@ -1,10 +1,12 @@
+import { useForm } from '@conform-to/react'
+import { parse } from '@conform-to/zod'
 import { cssBundleHref } from '@remix-run/css-bundle'
 import {
 	json,
 	type DataFunctionArgs,
 	type HeadersFunction,
 	type LinksFunction,
-	type V2_MetaFunction,
+	type MetaFunction,
 } from '@remix-run/node'
 import {
 	Link,
@@ -14,33 +16,40 @@ import {
 	Outlet,
 	Scripts,
 	ScrollRestoration,
+	useFetcher,
+	useFetchers,
 	useLoaderData,
 } from '@remix-run/react'
 import { withSentry } from '@sentry/remix'
-import { Suspense, lazy } from 'react'
-import fontStylestylesheetUrl from './styles/font.css'
-import tailwindStylesheetUrl from './styles/tailwind.css'
-import { ClientHintCheck, getHints } from './utils/client-hints.tsx'
+import { AuthenticityTokenProvider } from 'remix-utils/csrf/react'
+import { HoneypotProvider } from 'remix-utils/honeypot/react'
+import { z } from 'zod'
+import { Confetti } from './components/confetti.tsx'
+import { GeneralErrorBoundary } from './components/error-boundary.tsx'
+import { Icon, href as iconsHref } from './components/ui/icons/icon.tsx'
+import { EpicProgress } from './components/progress-bar.tsx'
+import { EpicToaster } from './components/toaster.tsx'
+import fontStyleSheetUrl from './styles/font.css'
+import tailwindStyleSheetUrl from './styles/tailwind.css'
+import { ClientHintCheck, getHints, useHints } from './utils/client-hints.tsx'
 import { getConfetti } from './utils/confetti.server.ts'
+import { csrf } from './utils/csrf.server.ts'
 import { getEnv } from './utils/env.server.ts'
+import { honeypot } from './utils/honeypot.server.ts'
 import { combineHeaders, getDomainUrl } from './utils/misc.tsx'
 import { useNonce } from './utils/nonce-provider.ts'
-import { type Theme, getTheme } from './utils/theme.server.ts'
+import { useRequestInfo } from './utils/request-info.ts'
+import { type Theme, setTheme, getTheme } from './utils/theme.server.ts'
 import { makeTimings } from './utils/timing.server.ts'
 import { getToast } from './utils/toast.server.ts'
-
-const RemixDevTools =
-	process.env.NODE_ENV === 'development'
-		? lazy(() => import('remix-development-tools'))
-		: null
 
 export const links: LinksFunction = () => {
 	return [
 		// Preload svg sprite as a resource to avoid render blocking
-		// { rel: 'preload', href: iconsHref, as: 'image' },
+		{ rel: 'preload', href: iconsHref, as: 'image' },
 		// Preload CSS as a resource to avoid render blocking
-		{ rel: 'preload', href: fontStylestylesheetUrl, as: 'style' },
-		{ rel: 'preload', href: tailwindStylesheetUrl, as: 'style' },
+		{ rel: 'preload', href: fontStyleSheetUrl, as: 'style' },
+		{ rel: 'preload', href: tailwindStyleSheetUrl, as: 'style' },
 		cssBundleHref ? { rel: 'preload', href: cssBundleHref, as: 'style' } : null,
 		{ rel: 'mask-icon', href: '/favicons/mask-icon.svg' },
 		{
@@ -56,13 +65,13 @@ export const links: LinksFunction = () => {
 		} as const, // necessary to make typescript happy
 		//These should match the css preloads above to avoid css as render blocking resource
 		{ rel: 'icon', type: 'image/svg+xml', href: '/favicons/favicon.svg' },
-		{ rel: 'stylesheet', href: fontStylestylesheetUrl },
-		{ rel: 'stylesheet', href: tailwindStylesheetUrl },
+		{ rel: 'stylesheet', href: fontStyleSheetUrl },
+		{ rel: 'stylesheet', href: tailwindStyleSheetUrl },
 		cssBundleHref ? { rel: 'stylesheet', href: cssBundleHref } : null,
 	].filter(Boolean)
 }
 
-export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
 	return [
 		{ title: data ? 'Epic Notes' : 'Error | Epic Notes' },
 		{ name: 'description', content: `Your own captain's log` },
@@ -71,9 +80,14 @@ export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
 
 export async function loader({ request }: DataFunctionArgs) {
 	const timings = makeTimings('root loader')
+	const user = await fetch('https://localhost:7777/users').then(res =>
+		res.json(),
+	)
 
 	const { toast, headers: toastHeaders } = await getToast(request)
 	const { confettiId, headers: confettiHeaders } = getConfetti(request)
+	const honeyProps = honeypot.getInputProps()
+	const [csrfToken, csrfCookieHeader] = await csrf.commitToken()
 
 	return json(
 		{
@@ -88,12 +102,16 @@ export async function loader({ request }: DataFunctionArgs) {
 			ENV: getEnv(),
 			toast,
 			confettiId,
+			honeyProps,
+			csrfToken,
+			user,
 		},
 		{
 			headers: combineHeaders(
 				{ 'Server-Timing': timings.toString() },
 				toastHeaders,
 				confettiHeaders,
+				csrfCookieHeader ? { 'set-cookie': csrfCookieHeader } : null,
 			),
 		},
 	)
@@ -104,6 +122,29 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => {
 		'Server-Timing': loaderHeaders.get('Server-Timing') ?? '',
 	}
 	return headers
+}
+
+const ThemeFormSchema = z.object({
+	theme: z.enum(['system', 'light', 'dark']),
+})
+
+export async function action({ request }: DataFunctionArgs) {
+	const formData = await request.formData()
+	const submission = parse(formData, {
+		schema: ThemeFormSchema,
+	})
+	if (submission.intent !== 'submit') {
+		return json({ status: 'idle', submission } as const)
+	}
+	if (!submission.value) {
+		return json({ status: 'error', submission } as const, { status: 400 })
+	}
+	const { theme } = submission.value
+
+	const responseInit = {
+		headers: { 'set-cookie': setTheme(theme) },
+	}
+	return json({ success: true, submission }, responseInit)
 }
 
 function Document({
@@ -145,20 +186,26 @@ function Document({
 function App() {
 	const data = useLoaderData<typeof loader>()
 	const nonce = useNonce()
+	const theme = useTheme()
+
+	console.log(data.user)
 
 	return (
-		<Document nonce={nonce} theme={'light'} env={data.ENV}>
+		<Document nonce={nonce} theme={theme} env={data.ENV}>
 			<div className="flex h-screen flex-col justify-between">
 				<header className="container py-6">
-					<nav className="flex items-center justify-between">
-						<Link to="/">
-							<div className="font-light">epic</div>
-							<div className="font-bold">notes</div>
-						</Link>
+					<nav>
+						<div className="flex flex-wrap items-center justify-between gap-4 sm:flex-nowrap md:gap-8">
+							<Link to="/">
+								<div className="font-light">epic</div>
+								<div className="font-bold">notes</div>
+							</Link>
+						</div>
 					</nav>
 				</header>
 
 				<div className="flex-1">
+					{data.user && <p>{data.user.name}</p>}
 					<Outlet />
 				</div>
 
@@ -167,17 +214,103 @@ function App() {
 						<div className="font-light">epic</div>
 						<div className="font-bold">notes</div>
 					</Link>
+					<ThemeSwitch userPreference={data.requestInfo.userPrefs.theme} />
 				</div>
 			</div>
-			{RemixDevTools ? (
-				<Suspense>
-					<RemixDevTools />
-				</Suspense>
-			) : null}
+			<Confetti id={data.confettiId} />
+			<EpicToaster toast={data.toast} />
+			<EpicProgress />
 		</Document>
 	)
 }
-export default withSentry(App)
+
+function AppWithProviders() {
+	const data = useLoaderData<typeof loader>()
+	return (
+		<AuthenticityTokenProvider token={data.csrfToken}>
+			<HoneypotProvider {...data.honeyProps}>
+				<App />
+			</HoneypotProvider>
+		</AuthenticityTokenProvider>
+	)
+}
+
+export default withSentry(AppWithProviders)
+
+/**
+ * @returns the user's theme preference, or the client hint theme if the user
+ * has not set a preference.
+ */
+export function useTheme() {
+	const hints = useHints()
+	const requestInfo = useRequestInfo()
+	const optimisticMode = useOptimisticThemeMode()
+	if (optimisticMode) {
+		return optimisticMode === 'system' ? hints.theme : optimisticMode
+	}
+	return requestInfo.userPrefs.theme ?? hints.theme
+}
+
+/**
+ * If the user's changing their theme mode preference, this will return the
+ * value it's being changed to.
+ */
+export function useOptimisticThemeMode() {
+	const fetchers = useFetchers()
+	const themeFetcher = fetchers.find(f => f.formAction === '/')
+
+	if (themeFetcher && themeFetcher.formData) {
+		const submission = parse(themeFetcher.formData, {
+			schema: ThemeFormSchema,
+		})
+		return submission.value?.theme
+	}
+}
+
+function ThemeSwitch({ userPreference }: { userPreference?: Theme | null }) {
+	const fetcher = useFetcher<typeof action>()
+
+	const [form] = useForm({
+		id: 'theme-switch',
+		lastSubmission: fetcher.data?.submission,
+	})
+
+	const optimisticMode = useOptimisticThemeMode()
+	const mode = optimisticMode ?? userPreference ?? 'system'
+	const nextMode =
+		mode === 'system' ? 'light' : mode === 'light' ? 'dark' : 'system'
+	const modeLabel = {
+		light: (
+			<Icon name="sun">
+				<span className="sr-only">Light</span>
+			</Icon>
+		),
+		dark: (
+			<Icon name="moon">
+				<span className="sr-only">Dark</span>
+			</Icon>
+		),
+		system: (
+			<Icon name="laptop">
+				<span className="sr-only">System</span>
+			</Icon>
+		),
+	}
+
+	return (
+		<fetcher.Form method="POST" {...form.props}>
+			<input type="hidden" name="theme" value={nextMode} />
+			<div className="flex gap-2">
+				<button
+					type="submit"
+					className="flex h-8 w-8 cursor-pointer items-center justify-center"
+				>
+					{modeLabel[mode]}
+				</button>
+			</div>
+		</fetcher.Form>
+	)
+}
 
 export function ErrorBoundary() {
 	// the nonce doesn't rely on the loader so we can access that
@@ -193,12 +326,7 @@ export function ErrorBoundary() {
 
 	return (
 		<Document nonce={nonce}>
-			<div className="container flex h-full flex-col items-center justify-center">
-				<h1 className="text-3xl font-bold">Something went wrong</h1>
-				<p className="text-body-md">
-					We're not sure what happened, but we're looking into it.
-				</p>
-			</div>
+			<GeneralErrorBoundary />
 		</Document>
 	)
 }
