@@ -80,9 +80,6 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export async function loader({ request }: DataFunctionArgs) {
 	const timings = makeTimings('root loader')
-	const user = await fetch('https://localhost:7777/users').then(res =>
-		res.json(),
-	)
 
 	const { toast, headers: toastHeaders } = await getToast(request)
 	const { confettiId, headers: confettiHeaders } = getConfetti(request)
@@ -104,7 +101,6 @@ export async function loader({ request }: DataFunctionArgs) {
 			confettiId,
 			honeyProps,
 			csrfToken,
-			user,
 		},
 		{
 			headers: combineHeaders(
@@ -188,8 +184,6 @@ function App() {
 	const nonce = useNonce()
 	const theme = useTheme()
 
-	console.log(data.user)
-
 	return (
 		<Document nonce={nonce} theme={theme} env={data.ENV}>
 			<div className="flex h-screen flex-col justify-between">
@@ -205,7 +199,6 @@ function App() {
 				</header>
 
 				<div className="flex-1">
-					{data.user && <p>{data.user.name}</p>}
 					<Outlet />
 				</div>
 

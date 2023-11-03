@@ -3,7 +3,7 @@
  */
 export default {
 	cacheDirectory: './node_modules/.cache/remix',
-	ignoredRouteFiles: ['**/*'],
+	ignoredRouteFiles: ['.*', '**/*.css', '**/*.test.{js,jsx,ts,tsx}'],
 	serverModuleFormat: 'esm',
 	serverPlatform: 'node',
 	tailwind: true,
