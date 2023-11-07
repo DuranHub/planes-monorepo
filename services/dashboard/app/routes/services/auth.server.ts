@@ -60,5 +60,4 @@ let auth0Strategy = new Auth0Strategy({
 
 authenticator.use(auth0Strategy);
 
-//export let {getSession, commitSession, destroySession} = sessionStrorage;
 export let {getSession, commitSession, destroySession} = sessionStrorage;

@@ -8,7 +8,7 @@ export default function Index() {
 	return (
 		<main className="relative flex min-h-screen items-center justify-center">
 			<div className="relative">
-			<div className='display: flex items-center justify-center'>
+			<div className='flex items-center justify-center'>
 				<Link to="/dashboard" className='bg-violet-950 text-white rounded-md shadow-gray-500 shadow-sm py-1.5 px-1.5 my-3.5 mt-5 mb-5 mx-1.5 w-3/4 transition ease-in-out delay-150 hover:-translate-y-2 hover:scale-110 hover:bg-indigo-500 duration-300 ... cursor-pointer'>
 					LogIn with Auth0
 				</Link>

@@ -1,4 +1,3 @@
-//import type { LoaderArgs } from "@remix-run/node";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { authenticator } from "./services/auth.server.ts";
 
