@@ -20,7 +20,7 @@ function validateField(
     throw new Error(`The ${fieldName} must not be empty`);
   }
 }
- 
+
 @Injectable()
 export class prismaProcedureProjectRepository
   implements procedureProjectRepository
