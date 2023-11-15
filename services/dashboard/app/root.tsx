@@ -81,6 +81,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export async function loader({ request }: DataFunctionArgs) {
 	const timings = makeTimings('root loader')
 
+	const workflow = await fetch('https://localhost:7777/workflow').then(res => res.json())
 	const { toast, headers: toastHeaders } = await getToast(request)
 	const { confettiId, headers: confettiHeaders } = getConfetti(request)
 	const honeyProps = honeypot.getInputProps()
@@ -101,6 +102,7 @@ export async function loader({ request }: DataFunctionArgs) {
 			confettiId,
 			honeyProps,
 			csrfToken,
+			workflow,
 		},
 		{
 			headers: combineHeaders(
@@ -199,6 +201,8 @@ function App() {
 				</header>
 
 				<div className="flex-1">
+					<p>ReactFlow Testing</p>
+					{data.workflow && <p> {data.workflow.edges[0].data.sourceLabel} TO {data.workflow.edges[0].data.targetLabel}</p>}
 					<Outlet />
 				</div>
 
