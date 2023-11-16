@@ -5,6 +5,8 @@ import {
 	time,
 } from '#app/utils/timing.server.ts'
 
+import { Position } from 'reactflow';
+
 const { json } = HttpResponse
 
 export const handlers: Array<HttpHandler> = [
@@ -24,8 +26,8 @@ export const handlers: Array<HttpHandler> = [
                         "label": place_1
                     },
                     "position": { "x": 0, "y": 0 },
-                    "sourcePosition": "Position.Right",
-                    "targetPosition": "Position.Left",
+                    "sourcePosition": Position.Right,
+                    "targetPosition": Position.Left,
                 },
                 {
                     "id": "button-2",
@@ -33,8 +35,8 @@ export const handlers: Array<HttpHandler> = [
                         "label": place_2
                     },
                     "position": { "x": 300, "y": 0 },
-                    "sourcePosition": "Position.Right",
-                    "targetPosition": "Position.Left",
+                    "sourcePosition": Position.Right,
+                    "targetPosition": Position.Left,
                 }
             ],
             { timings, type: 'generate nodes' },
@@ -56,7 +58,7 @@ export const handlers: Array<HttpHandler> = [
             { timings, type: 'generate edges' },
         )
 
-        console.log(timings)
+        console.log(JSON.stringify(timings)) //Shorter console log
 
         return json(
             { nodes, edges },
