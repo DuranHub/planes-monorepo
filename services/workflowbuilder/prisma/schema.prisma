@@ -8,11 +8,19 @@ datasource db {
 }
 
 model procedureProject {
-  id          String   @id @default(uuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id          String    @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   name        String
-  machineName String   @unique
+  machineName String    @unique
   description String
   deletedAt   DateTime?
+}
+
+model user {
+  id       String @id @default(uuid())
+  name     String
+  lastName String
+  phone    String
+  address  String
 }
