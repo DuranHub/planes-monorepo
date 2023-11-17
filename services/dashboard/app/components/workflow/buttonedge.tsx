@@ -13,7 +13,7 @@ import {
 } from "#app/components/ui/dialog.tsx"
 import { Button } from "#app/components/ui/button.tsx"
 //React-Icons
-import { FaPaperPlane } from '../node_modules/react-icons/fa/index.js'
+import { FaPaperPlane } from 'react-icons/fa'
 
 const onEdgeClick = (evt: any) => { //Stop the click event from triggering further event listeners
     evt.stopPropagation();

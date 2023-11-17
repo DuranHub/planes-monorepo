@@ -43,8 +43,7 @@ import { type Theme, setTheme, getTheme } from './utils/theme.server.ts'
 import { makeTimings } from './utils/timing.server.ts'
 import { getToast } from './utils/toast.server.ts'
 
-import Flow from '../workflow/canvas.tsx'
-import { Position } from 'reactflow'; //For static react-flow
+import WorkFlow from './routes/workflow.tsx'
 
 export const links: LinksFunction = () => {
 	return [
@@ -204,40 +203,7 @@ function App() {
 				</header>
 
 				<div className="flex-1">
-					<p>Mock Server Workflow Testing</p>
-					{data.workflow && <p> {data.workflow.edges[0].data.sourceLabel} TO {data.workflow.edges[0].data.targetLabel}</p>}
-					
-					<Flow
-						initialNodes={[ 
-							{ 
-								"id": "button-1", 
-								"data": { "label": "Lugar 1" }, 
-								"position": { "x": 0, "y": 0 }, 
-								"sourcePosition": Position.Right, 
-								"targetPosition": Position.Left 
-							}, 
-							{ 
-								"id": "button-2", 
-								"data": { "label": "Lugar 2" }, 
-								"position": { "x": 300, "y": 0 }, 
-								"sourcePosition": Position.Right, 
-								"targetPosition": Position.Left 
-							} 
-						]}
-						initialEdges={[ 
-							{ 
-								"id": "edge-button", 
-								"source": "button-1", 
-								"target": "button-2", 
-								"type": "buttonedge", 
-								"data": { 
-									"sourceLabel": "Lugar 1", 
-									"targetLabel": "Lugar 2" 
-								} 
-							} 
-						]}
-					/>
-
+					<WorkFlow/> {/* MSW React Flow */}
 					<Outlet />
 				</div>
 
