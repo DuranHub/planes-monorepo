@@ -43,6 +43,8 @@ import { type Theme, setTheme, getTheme } from './utils/theme.server.ts'
 import { makeTimings } from './utils/timing.server.ts'
 import { getToast } from './utils/toast.server.ts'
 
+import WorkFlow from './routes/workflow.tsx'
+
 export const links: LinksFunction = () => {
 	return [
 		// Preload svg sprite as a resource to avoid render blocking
@@ -201,8 +203,7 @@ function App() {
 				</header>
 
 				<div className="flex-1">
-					<p>ReactFlow Testing</p>
-					{data.workflow && <p> {data.workflow.edges[0].data.sourceLabel} TO {data.workflow.edges[0].data.targetLabel}</p>}
+					<WorkFlow/> {/* MSW React Flow */}
 					<Outlet />
 				</div>
 

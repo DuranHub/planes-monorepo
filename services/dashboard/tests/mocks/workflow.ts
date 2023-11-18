@@ -1,10 +1,12 @@
 import { faker } from '@faker-js/faker'
 import { HttpResponse, http, type HttpHandler} from 'msw'
 import {
-    combineServerTimings,
 	makeTimings,
 	time,
+  combineServerTimings,
 } from '#app/utils/timing.server.ts'
+
+import { Position } from 'reactflow';
 
 const { json } = HttpResponse
 
@@ -25,8 +27,8 @@ export const handlers: Array<HttpHandler> = [
                         "label": place_1
                     },
                     "position": { "x": 0, "y": 0 },
-                    "sourcePosition": "Position.Right",
-                    "targetPosition": "Position.Left",
+                    "sourcePosition": Position.Right,
+                    "targetPosition": Position.Left,
                 },
                 {
                     "id": "button-2",
@@ -34,8 +36,8 @@ export const handlers: Array<HttpHandler> = [
                         "label": place_2
                     },
                     "position": { "x": 300, "y": 0 },
-                    "sourcePosition": "Position.Right",
-                    "targetPosition": "Position.Left",
+                    "sourcePosition": Position.Right,
+                    "targetPosition": Position.Left,
                 }
             ],
             { timings, type: 'generate nodes' },
