@@ -3,6 +3,7 @@ import { HttpResponse, http, type HttpHandler} from 'msw'
 import {
 	makeTimings,
 	time,
+  combineServerTimings,
 } from '#app/utils/timing.server.ts'
 
 import { Position } from 'reactflow';
@@ -58,7 +59,7 @@ export const handlers: Array<HttpHandler> = [
             { timings, type: 'generate edges' },
         )
 
-        console.log(JSON.stringify(timings)) //Shorter console log
+        console.log(timings)
 
         return json(
             { nodes, edges },

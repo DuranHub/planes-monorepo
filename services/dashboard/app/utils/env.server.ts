@@ -5,6 +5,12 @@ const schema = z.object({
 	SESSION_SECRET: z.string(),
 	INTERNAL_COMMAND_TOKEN: z.string(),
 	HONEYPOT_SECRET: z.string(),
+	AUTH0_DOMAIN: z.string(),
+	AUTH0_CLIENT_ID: z.string(),
+	AUTH0_CLIENT_SECRET: z.string(),
+	AUTH0_CALLBACK_URL: z.string(),
+	AUTH0_LOGOUT_RETURN_TO_URL: z.string(),
+	AUTH0_LOGOUT_URL: z.string(),
 	// If you plan on using Sentry, uncomment this line
 	// SENTRY_DSN: z.string(),
 	// If you plan to use Resend, uncomment this line
