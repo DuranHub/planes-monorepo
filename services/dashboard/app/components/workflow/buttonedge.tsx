@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { BaseEdge, EdgeLabelRenderer, EdgeProps, getBezierPath } from 'reactflow';
+import React, { useState } from 'react'
+import { BaseEdge, EdgeLabelRenderer, EdgeProps, getBezierPath } from 'reactflow'
 //Shadcn
 import {
     Dialog,
@@ -16,8 +16,8 @@ import { Button } from "#app/components/ui/button.tsx"
 import { FaPaperPlane } from 'react-icons/fa'
 
 const onEdgeClick = (evt: any) => { //Stop the click event from triggering further event listeners
-    evt.stopPropagation();
-};
+    evt.stopPropagation()
+}
 
 //Custom Button Edge component
 export default function CustomEdge({
@@ -39,10 +39,10 @@ export default function CustomEdge({
         targetX,
         targetY,
         targetPosition,
-    });
+    })
 
     //Extracting labels from nodes
-    const { sourceLabel, targetLabel } = data;
+    const { sourceLabel, targetLabel } = data
 
     //useState hook to manage form values
     const [formValues, setFormValues] = useState({ 
@@ -50,18 +50,18 @@ export default function CustomEdge({
         apellido: '', 
         fuente: sourceLabel, 
         objetivo: targetLabel,
-    });
+    })
 
     //Function to manage input change
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setFormValues({ ...formValues, [event.target.name]: event.target.value });
-    };
+        setFormValues({ ...formValues, [event.target.name]: event.target.value })
+    }
 
     //Function to manage submit event
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault(); //prevents page to refresh
-        console.log(formValues);
-    };
+        event.preventDefault() //prevents page to refresh
+        console.log(formValues)
+    }
 
     return (
         <>
@@ -109,5 +109,5 @@ export default function CustomEdge({
             </div>
         </EdgeLabelRenderer>
         </>
-    );
+    )
 }
