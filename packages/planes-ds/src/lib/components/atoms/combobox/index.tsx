@@ -54,7 +54,7 @@ export function Combobox({ items, selectLabel, searchLabel, notFoundMessage, aut
             <Command>
             {autoComplete ? <CommandInput placeholder={searchLabel}/> : null}
             <CommandEmpty> {notFoundMessage} </CommandEmpty>
-            <CommandGroup>
+            <CommandGroup className="max-h-60 overflow-y-auto">
             {items.map((item) => (
                 <CommandItem
                     key={item.value}
