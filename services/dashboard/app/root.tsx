@@ -1,4 +1,3 @@
-import { useForm } from '@conform-to/react'
 import { parse } from '@conform-to/zod'
 import { cssBundleHref } from '@remix-run/css-bundle'
 import {
@@ -9,14 +8,7 @@ import {
 	type MetaFunction,
 } from '@remix-run/node'
 import {
-	Link,
-	Links,
-	LiveReload,
-	Meta,
 	Outlet,
-	Scripts,
-	ScrollRestoration,
-	useFetcher,
 	useFetchers,
 	useLoaderData,
 } from '@remix-run/react'
@@ -25,13 +17,17 @@ import { AuthenticityTokenProvider } from 'remix-utils/csrf/react'
 import { HoneypotProvider } from 'remix-utils/honeypot/react'
 import { z } from 'zod'
 import { Confetti } from './components/confetti.tsx'
+import Document from './components/Document.tsx'
 import { GeneralErrorBoundary } from './components/error-boundary.tsx'
-import { Icon, href as iconsHref } from './components/ui/icons/icon.tsx'
+import Header from './components/Header.tsx'
 import { EpicProgress } from './components/progress-bar.tsx'
+import Sidebar from './components/Navigation/Sidebar.tsx'
 import { EpicToaster } from './components/toaster.tsx'
+import { href as iconsHref } from './components/ui/icons/icon.tsx'
+import { getAuthenticatedUser } from './services/auth.server.ts'
 import fontStyleSheetUrl from './styles/font.css'
 import tailwindStyleSheetUrl from './styles/tailwind.css'
-import { ClientHintCheck, getHints, useHints } from './utils/client-hints.tsx'
+import { getHints, useHints } from './utils/client-hints.tsx'
 import { getConfetti } from './utils/confetti.server.ts'
 import { csrf } from './utils/csrf.server.ts'
 import { getEnv } from './utils/env.server.ts'
@@ -39,11 +35,9 @@ import { honeypot } from './utils/honeypot.server.ts'
 import { combineHeaders, getDomainUrl } from './utils/misc.tsx'
 import { useNonce } from './utils/nonce-provider.ts'
 import { useRequestInfo } from './utils/request-info.ts'
-import { type Theme, setTheme, getTheme } from './utils/theme.server.ts'
+import { setTheme, getTheme } from './utils/theme.server.ts'
 import { makeTimings } from './utils/timing.server.ts'
 import { getToast } from './utils/toast.server.ts'
-
-import WorkFlow from './routes/workflow.tsx'
 
 export const links: LinksFunction = () => {
 	return [
@@ -81,9 +75,14 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 }
 
 export async function loader({ request }: DataFunctionArgs) {
+	const user = await getAuthenticatedUser(request)
+	//We get the only parameters that we need
+
 	const timings = makeTimings('root loader')
 
-	const workflow = await fetch('https://localhost:7777/workflow').then(res => res.json())
+	const workflow = await fetch('https://localhost:7777/workflow').then(res =>
+		res.json(),
+	)
 	const { toast, headers: toastHeaders } = await getToast(request)
 	const { confettiId, headers: confettiHeaders } = getConfetti(request)
 	const honeyProps = honeypot.getInputProps()
@@ -104,6 +103,7 @@ export async function loader({ request }: DataFunctionArgs) {
 			confettiId,
 			honeyProps,
 			csrfToken,
+			user,
 			workflow,
 		},
 		{
@@ -147,42 +147,6 @@ export async function action({ request }: DataFunctionArgs) {
 	return json({ success: true, submission }, responseInit)
 }
 
-function Document({
-	children,
-	nonce,
-	theme = 'light',
-	env = {},
-}: {
-	children: React.ReactNode
-	nonce: string
-	theme?: Theme
-	env?: Record<string, string>
-}) {
-	return (
-		<html lang="en" className={`${theme} h-full overflow-x-hidden`}>
-			<head>
-				<ClientHintCheck nonce={nonce} />
-				<Meta />
-				<meta charSet="utf-8" />
-				<meta name="viewport" content="width=device-width,initial-scale=1" />
-				<Links />
-			</head>
-			<body className="bg-background text-foreground">
-				{children}
-				<script
-					nonce={nonce}
-					dangerouslySetInnerHTML={{
-						__html: `window.ENV = ${JSON.stringify(env)}`,
-					}}
-				/>
-				<ScrollRestoration nonce={nonce} />
-				<Scripts nonce={nonce} />
-				<LiveReload nonce={nonce} />
-			</body>
-		</html>
-	)
-}
-
 function App() {
 	const data = useLoaderData<typeof loader>()
 	const nonce = useNonce()
@@ -190,29 +154,11 @@ function App() {
 
 	return (
 		<Document nonce={nonce} theme={theme} env={data.ENV}>
-			<div className="flex h-screen flex-col justify-between">
-				<header className="container py-6">
-					<nav>
-						<div className="flex flex-wrap items-center justify-between gap-4 sm:flex-nowrap md:gap-8">
-							<Link to="/">
-								<div className="font-light">epic</div>
-								<div className="font-bold">notes</div>
-							</Link>
-						</div>
-					</nav>
-				</header>
-
-				<div className="flex-1">
-					<WorkFlow/> {/* MSW React Flow */}
+			<Header user={data.user} />
+			<div className="grid min-h-screen grid-cols-5">
+				<Sidebar requestInfo={data.requestInfo} />
+				<div className="col-span-4 flex-1">
 					<Outlet />
-				</div>
-
-				<div className="container flex justify-between pb-5">
-					<Link to="/">
-						<div className="font-light">epic</div>
-						<div className="font-bold">notes</div>
-					</Link>
-					<ThemeSwitch userPreference={data.requestInfo.userPrefs.theme} />
 				</div>
 			</div>
 			<Confetti id={data.confettiId} />
@@ -263,51 +209,6 @@ export function useOptimisticThemeMode() {
 		})
 		return submission.value?.theme
 	}
-}
-
-function ThemeSwitch({ userPreference }: { userPreference?: Theme | null }) {
-	const fetcher = useFetcher<typeof action>()
-
-	const [form] = useForm({
-		id: 'theme-switch',
-		lastSubmission: fetcher.data?.submission,
-	})
-
-	const optimisticMode = useOptimisticThemeMode()
-	const mode = optimisticMode ?? userPreference ?? 'system'
-	const nextMode =
-		mode === 'system' ? 'light' : mode === 'light' ? 'dark' : 'system'
-	const modeLabel = {
-		light: (
-			<Icon name="sun">
-				<span className="sr-only">Light</span>
-			</Icon>
-		),
-		dark: (
-			<Icon name="moon">
-				<span className="sr-only">Dark</span>
-			</Icon>
-		),
-		system: (
-			<Icon name="laptop">
-				<span className="sr-only">System</span>
-			</Icon>
-		),
-	}
-
-	return (
-		<fetcher.Form method="POST" {...form.props}>
-			<input type="hidden" name="theme" value={nextMode} />
-			<div className="flex gap-2">
-				<button
-					type="submit"
-					className="flex h-8 w-8 cursor-pointer items-center justify-center"
-				>
-					{modeLabel[mode]}
-				</button>
-			</div>
-		</fetcher.Form>
-	)
 }
 
 export function ErrorBoundary() {

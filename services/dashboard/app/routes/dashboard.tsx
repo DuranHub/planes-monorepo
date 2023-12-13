@@ -1,49 +1,58 @@
-import { useLoaderData } from "@remix-run/react";
-import { getAuthenticatedUser } from "./services/auth.server.ts";
+import { useLoaderData } from '@remix-run/react'
+import { getAuthenticatedUser } from '../services/auth.server.ts'
 import { type MetaFunction } from '@remix-run/node'
-import { LoaderFunctionArgs } from "@remix-run/node";
-import {Link} from "@remix-run/react"
+import { LoaderFunctionArgs } from '@remix-run/node'
+import { Link } from '@remix-run/react'
+import MainLayout from '#app/components/Layouts/MainLayout.tsx'
 
 export const meta: MetaFunction = () => {
 	return [
-	  { title: "PlanEs" },
-	  { name: "description", content: "Welcome to PlanES" },
-	];
-  };
+		{ title: 'PlanEs' },
+		{ name: 'description', content: 'Welcome to PlanES' },
+	]
+}
 
-export const loader = async ({request}: LoaderFunctionArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
 	//We wait for the login, if the user are authenticated or not
-	const user = await getAuthenticatedUser(request);
+	const user = await getAuthenticatedUser(request)
 	//We get the only parameters that we need
-	const {email, name, picture} = user;
+	const { email, name, picture } = user
 
-	return {email, name, picture};
-};
+	return { email, name, picture }
+}
 
-export default function Dashboard() {	
+export default function Dashboard() {
 	//Get the data of user from loader
-	const {email , name , picture} = useLoaderData<typeof loader>();
+	const { email, name, picture } = useLoaderData<typeof loader>()
 
 	return (
-	<div className="flex flex-colums justify-around w-full">
-		<div className='bg-gray-900 mt-10 w-auto flex flex-col justify-center items-center mr-5 h-5/6 text-center rounded-md shadow-gray-600 shadow-sm py-2.5 px-2.5'>
-			<h1 className="text-3xl font-bold m-5">PlanES</h1>		
+		<MainLayout
+			className="w-full"
+			as="main"
+			Header={
+				<div className="flex w-full flex-col gap-8 text-3xl">
+					<span>Dashboard</span>
+					<span>settings</span>
+				</div>
+			}
+		>
+			<div className="mr-5 mt-10 flex h-5/6 w-auto flex-col items-center justify-center rounded-md bg-gray-900 px-2.5 py-2.5 text-center shadow-sm shadow-gray-600">
+				<h1 className="m-5 text-3xl font-bold">PlanES</h1>
 
-			<div className="flex flex-col justify-center items-center m-5 ">
-				{/* Show the data */}
-				<img className="rounded-full m-3" src={picture}></img>
-				<h2>{name}</h2>
-				<h2>{email}</h2>
-			</div>
+				<div className="m-5 flex flex-col items-center justify-center ">
+					{/* Show the data */}
+					<img className="m-3 rounded-full" src={picture}></img>
+					<h2>{name}</h2>
+					<h2>{email}</h2>
+				</div>
 				{/* Button or link to logout */}
-				<Link to="/logout" className="bg-violet-950 text-white rounded-md shadow-gray-500 shadow-sm py-1.5 px-1.5 m-5 w-3/4 transition ease-in-out delay-150 hover:bg-red-500 duration-300 ...">
+				<Link
+					to="/logout"
+					className="... m-5 w-3/4 rounded-md bg-violet-950 px-1.5 py-1.5 text-white shadow-sm shadow-gray-500 transition delay-150 duration-300 ease-in-out hover:bg-red-500"
+				>
 					Logout
 				</Link>
-		</div>
-
-		
-	</div>
-	
-	);
+			</div>
+		</MainLayout>
+	)
 }
-//);
