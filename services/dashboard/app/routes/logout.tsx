@@ -2,9 +2,9 @@ import { ActionFunction, redirect } from "@remix-run/node";
 import {
   destroySession,
   getSession,
-} from "./services/auth.server.ts";
+} from "../services/auth.server.ts";
 import { LoaderFunctionArgs } from "@remix-run/node";
-import { authenticator } from "./services/auth.server.ts";
+import { authenticator } from "../services/auth.server.ts";
 
 export let loader = async({request}: LoaderFunctionArgs) => {
 

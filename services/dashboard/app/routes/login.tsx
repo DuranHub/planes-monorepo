@@ -1,6 +1,6 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { authenticator } from "./services/auth.server.ts";
+import { authenticator } from "../services/auth.server.ts";
 
 export const loader: LoaderFunction = async ({ request }) => {
     //We wait if the user is authenticated or not
