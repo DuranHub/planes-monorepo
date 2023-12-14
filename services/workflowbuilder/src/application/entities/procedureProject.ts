@@ -1,5 +1,3 @@
-import { randomUUID } from 'node:crypto';
-
 export interface ProcedureProjectProps {
   createdAt?: Date | null;
   updatedAt?: Date | null;
@@ -14,7 +12,7 @@ export class ProcedureProject {
   private _id: string;
 
   constructor(props: ProcedureProjectProps) {
-    // this._id = !id ? randomUUID() : id;
+    //this._id = !id ? randomUUID() : id;
     this.props = props;
 
     if (props.machineName) {

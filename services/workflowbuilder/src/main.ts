@@ -5,7 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  console.log(`⚡️ Running on http://localhost:3000`);
+  console.log(`⚡️ Running on http://localhost:3000/api`);
 
   const config = new DocumentBuilder()
     .setTitle('Workflow Builder Services')

@@ -1,6 +1,6 @@
-import { ProcedureProject } from '../entities/procedureProject';
-import { procedureProjectRepository } from '../repositories/procedure-project-repository';
-import { UseCase } from './use-case';
+import { ProcedureProject } from 'src/application/entities/procedureProject';
+import { procedureProjectRepository } from 'src/application/repositories/procedure-project-repository';
+import { UseCase } from '../use-case';
 
 interface findByFieldRequest {
   field: 'name' | 'machineName' | 'id';

@@ -12,9 +12,10 @@ export abstract class procedureProjectRepository {
     value: string,
   ): Promise<ProcedureProject[]>;
   abstract findAll(): Promise<ProcedureProject[]>;
-}
-
-export abstract class procedureProjectRepository {
-  abstract create(procedureProject: ProcedureProject): Promise<void>;
   abstract delete(id: string): Promise<void>;
 }
+
+// export abstract class procedureProjectRepository {
+//   abstract create(procedureProject: ProcedureProject): Promise<void>;
+//   abstract delete(id: string): Promise<void>;
+// }

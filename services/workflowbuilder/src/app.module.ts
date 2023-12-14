@@ -3,6 +3,6 @@ import { DatabaseModule } from './infra/database/database.module';
 import { HttpModule } from './infra/http/http.module';
 
 @Module({
-  imports: [DatabaseModule,HttpModule],
+  imports: [DatabaseModule, HttpModule],
 })
 export class AppModule {}

@@ -51,9 +51,9 @@ export class prismaProcedureProjectRepository
     );
 
     return procedureProject;
-}
+  }
 
-async delete(id: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     try {
       console.log('Prisma repository - ID a eliminar: ', id);
 
@@ -81,7 +81,7 @@ async delete(id: string): Promise<void> {
         },
       });
     } catch (error) {
-      throw new Error('Prisma repository - Error al actualizar')
+      throw new Error('Prisma repository - Error al actualizar');
     }
   }
 

@@ -11,11 +11,11 @@ import {
   NotFoundException,
   Post,
 } from '@nestjs/common';
-import { deleteProcedureProjectUseCase } from 'src/application/use-cases/deleteProcedureProject-use-case';
-import { createProcedureProjectUseCase } from 'src/application/use-cases/createProcedureProject-use-case';
+import { deleteProcedureProjectUseCase } from 'src/application/use-cases/procedureProject/deleteProcedureProject-use-case';
+import { createProcedureProjectUseCase } from 'src/application/use-cases/procedureProject/createProcedureProject-use-case';
 import { createProcedureProjectDto } from '../dtos/createProcedureProjectDto';
 import { procedureProjectMapper } from '../mappers/proccedureProject-mapper';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProcedureProject } from 'src/application/entities/procedureProject';
 import { prismaProcedureProjectRepository } from 'src/infra/database/prisma/repositories/prisma-procedureProject-repository';
 import { updateProcedureProjectDto } from '../dtos/updateProcedureProjectDto';
@@ -28,7 +28,8 @@ const RESPONSES = {
   INTERNAL_SERVER_ERROR: 500,
 };
 
-@Controller()
+@Controller({ path: 'ProcedureProjects' })
+@ApiTags('ProcedureProject')
 export class procedureProjectController {
   constructor(
     private CreateProcedureProjectUseCase: createProcedureProjectUseCase,

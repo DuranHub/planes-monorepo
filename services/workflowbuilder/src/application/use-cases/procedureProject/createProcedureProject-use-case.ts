@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { ProcedureProject } from '../entities/procedureProject';
-import { UseCase } from './use-case';
-import { procedureProjectRepository } from '../repositories/procedure-project-repository';
+import { ProcedureProject } from 'src/application/entities/procedureProject';
+import { UseCase } from '../use-case';
+import { procedureProjectRepository } from 'src/application/repositories/procedure-project-repository';
 
 interface createProcedureProjectRequest {
   name: string;

@@ -16,3 +16,10 @@ model procedureProject {
   description String
   deletedAt   DateTime?
 }
+
+model procedure {
+  id String @id @default(uuid())
+  completedRequirements Json
+  node Json
+  arrow Json
+}
