@@ -21,5 +21,20 @@ export const routes: Route[] = [
 		name: 'Workflow',
 		path: '/workflow',
         icon: 'dots-horizontal',
+	},	
+	{
+		name: 'Form',
+		path: '/form2',
+        icon: 'dots-horizontal',
+	},
+	{
+		name: 'Form3',
+		path: '/form3',
+        icon: 'dots-horizontal',
+	},
+	{
+		name: 'Form Info',
+		path: '/formInfo',
+        icon: 'dots-horizontal',
 	},
 ]
