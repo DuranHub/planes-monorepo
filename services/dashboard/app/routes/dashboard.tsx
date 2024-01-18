@@ -4,6 +4,7 @@ import { type MetaFunction } from '@remix-run/node'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { Link } from '@remix-run/react'
 import MainLayout from '#app/components/Layouts/MainLayout.tsx'
+import {Button} from '../components/ui/button.tsx'
 
 export const meta: MetaFunction = () => {
 	return [
@@ -36,22 +37,22 @@ export default function Dashboard() {
 				</div>
 			}
 		>
-			<div className="mr-5 mt-10 flex h-5/6 w-auto flex-col items-center justify-center rounded-md bg-gray-900 px-2.5 py-2.5 text-center shadow-sm shadow-gray-600">
-				<h1 className="m-5 text-3xl font-bold">PlanES</h1>
+			<div className="mr-5 mt-10 flex h-5/6 w-auto flex-col items-center justify-center rounded-md  px-2.5 py-2.5 text-center shadow-sm shadow-gray-600 dark:bg-gray-900">
+				<h1 className="m-5 text-3xl font-bold text-gray-800 dark:text-gray-50">PlanES</h1>
 
-				<div className="m-5 flex flex-col items-center justify-center ">
+				<div className="m-5 flex flex-col items-center justify-center text-gray-800 dark:text-gray-50">
 					{/* Show the data */}
 					<img className="m-3 rounded-full" src={picture}></img>
 					<h2>{name}</h2>
 					<h2>{email}</h2>
 				</div>
 				{/* Button or link to logout */}
-				<Link
-					to="/logout"
-					className="... m-5 w-3/4 rounded-md bg-violet-950 px-1.5 py-1.5 text-white shadow-sm shadow-gray-500 transition delay-150 duration-300 ease-in-out hover:bg-red-500"
-				>
-					Logout
-				</Link>
+				<Button variant={'destructive'} className='w-3/4' asChild>
+					<Link
+						to="/logout">
+							Logout
+					</Link>	
+				</Button>
 			</div>
 		</MainLayout>
 	)

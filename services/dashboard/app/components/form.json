@@ -17,7 +17,7 @@
                     },
                     {
                         "name":"email",
-                        "label":"email",
+                        "label":"Email",
                         "hidden": false,
                         "required": true,
                         "data_type": "String",
@@ -36,7 +36,6 @@
                         "name":"age",
                         "label":"Age",
                         "hidden": false,
-                        "options": [],
                         "required": true,
                         "data_type": "number",
                         "html_element": "number",
@@ -46,10 +45,48 @@
                         "name":"photo",
                         "label":"Photo",
                         "hidden": false,
-                        "options": [],
                         "required": true,
                         "data_type": "Image",
                         "html_element": "file"
+                    },
+                    {
+                        "name":"button",
+                        "label":"button",
+                        "hidden": false,
+                        "data_type": "button",
+                        "html_element": "button",
+                        "placeholder":"Button"
+                    },
+                    {
+                        "name":"radio",
+                        "label":"¿Cómo está barriendo?",
+                        "hidden": false,
+                        "data_type": "radio",
+                        "html_element": "radio",
+                        "options": [
+                            "Con escoba",
+                            "Sin escoba"
+                        ]
+                    },
+                    {
+                        "name":"checkbox",
+                        "label":"Select something",
+                        "html_element": "checkbox",
+                        "options": [
+                            "Option1",
+                            "Option2",
+                            "Option3"
+                        ]
+                    },
+                    {
+                        "name":"select",
+                        "label":"Select an option",
+                        "html_element": "select",
+                        "options":[
+                            "Male",
+                            "Female",
+                            "39 tipos de gays"
+                        ]
                     }
                 ]
             }
